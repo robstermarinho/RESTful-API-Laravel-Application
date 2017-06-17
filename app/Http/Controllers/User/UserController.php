@@ -26,16 +26,6 @@ class UserController extends ApiController
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -72,25 +62,14 @@ class UserController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
         // findOrFail going to throw and exception 404 NotFound if it fails
-        $user = User::findOrFail($id);
+        // $user = User::findOrFail($id);
 
-        //return response()->json(['data' => $user], 200);
+        // Using implicit model biding with the variable $user
         return $this->showOne($user, 200);
 
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -100,10 +79,8 @@ class UserController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        $user = User::findOrFail($id); 
-        
         $rules = [
             'email' => 'email|unique:users,email,' . $user->id,      // The own email skip the validation
             'password' => 'min:6|confirmed',                                
@@ -156,9 +133,9 @@ class UserController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($id);
+        
         $user->delete();
         //return response()->json(['data' => $user], 200);
 
