@@ -49,6 +49,26 @@ class User extends Authenticatable
         'verification_token',
     ];
 
+    //***************** Mutators
+    public function setNameAttribute($name){
+        // Every time the name is recorded in database the name should be in lower case.
+        $this->attributes['name'] = strtolower($name);
+    }
+
+    public function getNameAttribute($name){
+
+        // But when we retry this from database we wetru in UcWords.
+        return ucwords($name);
+    }
+
+    public function setEmailAttribute($email){
+        // every email should be lower case
+        $this->attributes['email'] = strtolower($email);
+    }
+    
+    //***************** END Mutators
+
+
     public function isVerified(){
         return $this->verified == User::VERIFIED_USER;
     }
