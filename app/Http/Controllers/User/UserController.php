@@ -4,11 +4,11 @@ namespace App\Http\Controllers\User;
 
 use App\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 
 
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +20,9 @@ class UserController extends Controller
         $users = User::all();
 
         // 200 OK RESPONSE
-        return response()->json(['data' => $users], 200);
+        //return response()->json(['data' => $users], 200);
+
+        return $this->showAll($users, 200);
     }
 
     /**
@@ -59,8 +61,9 @@ class UserController extends Controller
         $user = User::create($data); // Create and store
         
         // 201 CREATED
-        return response()->json(['data' => $user], 201);
-
+        //return response()->json(['data' => $user], 201);
+        
+        return $this->showOne($user, 201);
     }
 
     /**
@@ -74,7 +77,8 @@ class UserController extends Controller
         // findOrFail going to throw and exception 404 NotFound if it fails
         $user = User::findOrFail($id);
 
-        return response()->json(['data' => $user], 200);
+        //return response()->json(['data' => $user], 200);
+        return $this->showOne($user, 200);
 
     }
 
@@ -127,7 +131,9 @@ class UserController extends Controller
         if ($request->has('admin')) {
             // If the user is not verified...
             if (!$user->isVerified()) {
-                return response()->json(['error' => 'Only verified users can modify the admin field', 'code' => 409], 409);
+                //return response()->json(['error' => 'Only verified users can modify the admin field', 'code' => 409], 409);
+
+                return $this->errorResponse('Only verified users can modify the admin field', 409);
             }
 
             $user->admin = $request->admin;
@@ -135,11 +141,13 @@ class UserController extends Controller
 
         // If you are trying to update the same value or if you pass nothing like parameter
         if (!$user->isDirty()) {
-            return response()->json(['error' => 'You need to specify a different value to update', 'code' => 422], 422);
+            return $this->errorResponse('You need to specify a different value to update', 422);
         }
 
         $user->save();    
-        return response()->json(['data' => $user], 200);
+        //return response()->json(['data' => $user], 200);
+        
+        return $this->showOne($user, 200);
     }
 
     /**
@@ -152,6 +160,8 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return response()->json(['data' => $user], 200);       
+        //return response()->json(['data' => $user], 200);
+
+        return $this->showOne($user, 200);       
     }
 }
