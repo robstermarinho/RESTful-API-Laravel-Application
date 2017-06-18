@@ -101,7 +101,7 @@ class Handler extends ExceptionHandler
             }
         }
 
-        // 
+        // If we get some TokenMismatchException we redirect back to the page with some previous data
         if ($exception instanceof TokenMismatchException) {
             return redirect()->back()->withInput($request->input());
         }
@@ -127,7 +127,10 @@ class Handler extends ExceptionHandler
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        return $this->errorResponse('Unauthenticated', 401);
+        if ($this->isFrontend($request)) {
+            return redirect()->guest('login');
+        }
+        return $this->errorResponse('Unauthenticated.', 401);
 
         // reWriting the default unauthenticated function that redirect to login
         /*
@@ -151,7 +154,23 @@ class Handler extends ExceptionHandler
     protected function convertValidationExceptionToResponse(ValidationException $e, $request)
     {
         $errors = $e->validator->errors()->getMessages();
-        //return response()->json($errors, 422);
+
+        // if is a front end request redirect back with errors to the page
+        if ($this->isFrontend($request)) {
+            return $request->ajax() ? response()->json($error, 422) : redirect()
+                ->back()
+                ->withInput($request->input())
+                ->withErrors($errors);
+        }
+
         return $this->errorResponse($errors, 422);
     }
+
+    // Verifying if it's a route from front end 
+    private function isFrontend($request)
+    {
+        return $request->acceptsHtml() && collect($request->route()->middleware())->contains('web');
+    }
+
+
 }
