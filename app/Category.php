@@ -18,6 +18,10 @@ class Category extends Model
         'description',
     ];
 
+    // Hidden pivot attribute from queries
+    protected $hidden = [
+    	'pivot'
+    ];
     public function products(){
         return $this->belongsToMany(Product::class);
     }
