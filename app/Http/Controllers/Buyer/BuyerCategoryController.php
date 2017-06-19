@@ -8,6 +8,11 @@ use App\Http\Controllers\ApiController;
 
 class BuyerCategoryController extends ApiController
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
      * Display all categoris from a buyer
      *

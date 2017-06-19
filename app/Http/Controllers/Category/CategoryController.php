@@ -8,6 +8,15 @@ use App\Http\Controllers\ApiController;
 
 class CategoryController extends ApiController
 {
+
+    public function __construct()
+    {
+        $this->middleware('client.credentials')->only(['index', 'show']);
+        // this would be protected by auth:api
+        $this->middleware('auth:api')->except(['index', 'show']);        
+        //$this->middleware('transform.input:' . CategoryTransformer::class)->only(['store', 'update']);
+    }
+
     /**
      * Display a listing of the resource.
      *

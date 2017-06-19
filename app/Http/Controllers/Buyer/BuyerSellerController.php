@@ -8,6 +8,10 @@ use App\Http\Controllers\ApiController;
 
 class BuyerSellerController extends ApiController
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }    
     /**
      * Display all sellers from a specific Buyer
      *

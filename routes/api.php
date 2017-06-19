@@ -57,4 +57,6 @@ Route::resource('transactions.sellers', 'Transaction\TransactionSellerController
 Route::resource('users', 'User\UserController', ['except' => ['create', 'edit']]);
 Route::name('verify')->get('users/verify/{token}', 'User\UserController@verify');
 Route::name('resend')->get('users/{user}/resend', 'User\UserController@resend');
-//Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
+
+// Instead of use only thottle ir made the ouauth/token make use of the api middleware group
+Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');

@@ -8,6 +8,10 @@ use App\Http\Controllers\ApiController;
 
 class TransactionSellerController extends ApiController
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }      
     /**
      * It returns the seller of the product of the transaction
      *
