@@ -63,7 +63,8 @@ class SellerProductController extends ApiController
         $data = $request->all();
 
         $data['status'] = Product::UNAVAILABLE_PRODUCT;
-        $data['image'] = '1.png';
+        // generates a path and defatul filesystem
+        $data['image'] = $request->image->store('');
         $data['seller_id'] = $seller->id;
 
         $product = Product::create($data);
@@ -129,9 +130,9 @@ class SellerProductController extends ApiController
     public function destroy(Seller $seller, Product $product)
     {
         $this->checkSeller($seller, $product);
-
         $product->delete();
-        //Storage::delete($product->image);
+        //Delete the file
+        Storage::delete($product->image);
 
         return $this->showOne($product);
     }
