@@ -23,22 +23,23 @@ trait ApiResponser{
 	// Receive a colletion and a status code 200
 	// and returns a success response with collection and code
 	protected function showAll(Collection $collection, $code = 200)	{
-		/*
+		
 		if ($collection->isEmpty()) {
 			return $this->successResponse(['data' => $collection], $code);
 		}
+
 		$transformer = $collection->first()->transformer;
-		$collection = $this->filterData($collection, $transformer);
-		$collection = $this->sortData($collection, $transformer);
-		$collection = $this->paginate($collection);
+		//$collection = $this->filterData($collection, $transformer);
+		//$collection = $this->sortData($collection, $transformer);
+		//$collection = $this->paginate($collection);
 		$collection = $this->transformData($collection, $transformer);
-		$collection = $this->cacheResponse($collection);		*/
+		//$collection = $this->cacheResponse($collection);		
 		return $this->successResponse($collection, $code);
 	}
 	protected function showOne(Model $instance, $code = 200)
 	{
-		//$transformer = $instance->transformer;
-		//$instance = $this->transformData($instance, $transformer);
+		$transformer = $instance->transformer;
+		$instance = $this->transformData($instance, $transformer);
 		return $this->successResponse($instance, $code);
 	}
 
@@ -46,6 +47,11 @@ trait ApiResponser{
 	protected function showMessage($message, $code = 200){
 		return $this->successResponse(['data' => $message], $code);
 	}
+	protected function transformData($data, $transformer)
+	{
+		$transformation = fractal($data, new $transformer);
+		return $transformation->toArray();
+	} 
 	/*
 	protected function filterData(Collection $collection, $transformer)
 	{
@@ -83,11 +89,7 @@ trait ApiResponser{
 		$paginated->appends(request()->all());
 		return $paginated;
 	}
-	protected function transformData($data, $transformer)
-	{
-		$transformation = fractal($data, new $transformer);
-		return $transformation->toArray();
-	}
+
 	protected function cacheResponse($data)
 	{
 		$url = request()->url();

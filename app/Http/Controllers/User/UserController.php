@@ -160,6 +160,8 @@ class UserController extends ApiController
         return $this->showMessage('The account has been verified succesfully');
     }
 
+    
+
     public function resend(User $user)
     {
         if ($user->isVerified()) {
